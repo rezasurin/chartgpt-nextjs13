@@ -9,15 +9,28 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@kanaries/web-data-loader": "^0.1.7",
     "@types/node": "20.2.3",
     "@types/react": "18.2.6",
     "@types/react-dom": "18.2.4",
     "autoprefixer": "10.4.14",
+    "d3-dsv": "2",
+    "fs": "^0.0.1-security",
+    "langchain": "^0.0.78",
     "next": "13.4.3",
+    "openai": "^3.2.1",
+    "papaparse": "^5.4.1",
     "postcss": "8.4.23",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "tailwindcss": "3.3.2",
-    "typescript": "5.0.4"
+    "typescript": "5.0.4",
+    "vega": "^5.25.0",
+    "vega-embed": "^6.22.1",
+    "vega-lite": "^5.9.0"
+    
+  },
+  "devDependencies": {
+    "@types/papaparse": "^5.3.7"
   }
 }
