@@ -14,6 +14,8 @@ const ReactVega: React.FC<ReactVegaProps> = ({ spec, data }) => {
 
     const theme = useCurrentMediaTheme();
 
+    console.log(spec, data, "<< CHECK VEGA SPEC")
+
     useEffect(() => {
         if (container.current && data) {
             spec.data = {

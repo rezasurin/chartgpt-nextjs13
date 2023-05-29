@@ -14,10 +14,14 @@
     "@types/react": "18.2.6",
     "@types/react-dom": "18.2.4",
     "autoprefixer": "10.4.14",
+    "chromadb": "^1.5.0",
     "d3-dsv": "2",
+    "echarts": "^5.4.2",
+    "echarts-for-react": "^3.0.2",
     "fs": "^0.0.1-security",
     "langchain": "^0.0.78",
     "next": "13.4.3",
+    "node-appwrite": "^9.0.0",
     "openai": "^3.2.1",
     "papaparse": "^5.4.1",
     "postcss": "8.4.23",
@@ -28,9 +32,11 @@
     "vega": "^5.25.0",
     "vega-embed": "^6.22.1",
     "vega-lite": "^5.9.0"
-    
   },
   "devDependencies": {
     "@types/papaparse": "^5.3.7"
+  },
+  "engines": {
+    "node": ">=16.14.0 <=18.12.1"
   }
 }

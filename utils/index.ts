@@ -28,10 +28,12 @@ export function getValidVegaSpec (content: string): object | null {
   if (raw) {
       try {
           const spec = JSON.parse(raw);
+          console.log(spec, "<< SPEC GETVALIDVEGA")
           return spec
       } catch (e) {
           return null
       }
   }
+  console.log(raw, "<< CEK SPEC")
   return null;
 }

@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import InputText from "./InputText";
 import FileUploader from "./FileUploader";
 import Papa from "papaparse";
@@ -9,6 +9,13 @@ import { chatCompletation } from "../services/chatgpt"
 import { getValidVegaSpec, matchQuote } from '../utils'
 
 import { inferDatasetMeta } from "../utils/inferType";
+import ReactEcharts from 'echarts-for-react'
+import {ReactEChart} from "../components/ReactEchart"
+
+
+import { CSVLoader } from "langchain/document_loaders/fs/csv";
+import { Chroma } from "langchain/vectorstores/chroma";
+import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 
 import VizChat from "./VizChat"
 // import { error } from "console";
@@ -29,6 +36,7 @@ export default function Form(props) {
   const [inputValue, setInputValue] = useState("");
   const [dataset, setDataset] = useState(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  const [isLoading, setIsLoading] = useState(false)
 
   const [userQuery, setUserQuery] = useState()
   const [chat, setChat] = useState([])
@@ -41,6 +49,7 @@ export default function Form(props) {
     const files = e.target.files;
     if (files !== null) {
       const fileData: File = files[0];
+
       FileReader.csvReader({
         file: fileData,
         config: { type: "reservoirSampling", size: Infinity },
@@ -62,7 +71,8 @@ export default function Form(props) {
       content: userQuery
     }
     const fields = dataset.fields
-    chatCompletation([...chat, latestQuery], fields).then((res) => {
+    setIsLoading(true)
+    chatCompletation([...chat, latestQuery], {fields, dataSource: dataset.dataSource}).then((res) => {
 
       console.log(dataset,res, fields , "<< CEK UPLOAD");
       if (res.choices.length > 0) {
@@ -83,8 +93,14 @@ export default function Form(props) {
             //         res.choices[0].message.content
             // );
         }
+        
+    setIsLoading(false)
     }
-    }).catch((error) => console.log(error, "<< CEK ERROR"))
+    }).catch((error) => {
+      
+    setIsLoading(false)
+      console.log(error, "<< CEK ERROR")
+    })
 
     // chat.forEach((item) => (
     //   console.log(getValidVegaSpec(item.content), "<<  CEK VEGA SPEC")
@@ -97,7 +113,22 @@ export default function Form(props) {
     setFile(event.target.files[0]);
   };
 
-  console.log(chat, "<< CEKCHAT")
+  useEffect(() => {
+    const loadCSV = async () => {
+      const loader = new CSVLoader(file);
+      const docs = await loader.load();
+      console.log(docs, file, "<< CEKCHAT dataoption")
+      
+
+// console.log(vectorStore);
+    }
+
+    if (file !== null) {
+      loadCSV()
+    }
+
+  }, [file])
+
 
   return (
     <div className="flex flex-col w-1/2 gap-4 items-center">
@@ -116,6 +147,31 @@ export default function Form(props) {
         </button>
       </div>
       <VizChat messages={chat} dataset={dataset} />
+      {/* <div className="w-3/4 h-64 bg-white">
+        <ReactEcharts option={{
+          "xAxis": {
+            "type": "category",
+            "data": ["Product A", "Product B", "Product C", "Product D", "Product E", "Product F", "Product G", "Product H", "Product I", "Product J"]
+          },
+          "yAxis": {
+            "type": "value"
+          },
+          "series": [
+            {
+              "type": "bar",
+              "name": "Top 10 Products",
+              "barCategoryGap": "20%",
+              "data": [120, 200, 150, 80, 70, 110, 90, 160, 130, 100]
+            }
+          ]
+        }} />
+
+      </div> */}
+      {/* <ReactEChart spec={{}} data={dataset?.dataSource ?? []} /> */}
+      {
+        isLoading &&
+      <p className="text-white font-bold text-3xl">Loading ...</p>
+      }
     </div>
   );
 }
